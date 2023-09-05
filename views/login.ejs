@@ -1,0 +1,30 @@
+<%- include('header'); -%>
+
+<h2>login page</h2>
+<form action="/login" method="post">
+    <div>
+        <label for="email">Email: </label>
+        <input type="email" name="username" value="">
+    </div>
+    <div>
+        <label for="password">Password: </label>
+        <input type="password" name="password" id="">
+    </div>
+    <div>
+        <button type="submit" name="submit">login</button>
+    </div>
+</form>
+<div>
+    <a href="/auth/google" role="button">singIN with google</a>
+</div>
+
+
+
+
+
+
+
+
+
+
+<%- include('footer'); -%>
