@@ -74,7 +74,7 @@ passport.deserializeUser(function (user, cb) {
 passport.use(new GoogleStrategy({
     clientID: process.env.Client_ID,
     clientSecret: process.env.Client_secret,
-    callbackURL: "http://localhost:3000/auth/google/secrets",
+    callbackURL: "https://firstweb-kjks.onrender.com/auth/google/secrets",
     userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo',
     scope: ['profile', 'email', 'openid']
    
@@ -237,7 +237,7 @@ app.post("/logout",function(req,res){
 
 
 app.listen(PORT,function(req,res){
-    console.log("server started on port"+PORT);
+    console.log("server started on port"+ PORT);
 });
 
 
