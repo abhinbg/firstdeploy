@@ -9,6 +9,7 @@ const passport=require("passport");
 const passportLocalMongoose=require("passport-local-mongoose");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate =require("mongoose-findorcreate");
+const PORT=process.env.PORT || 3000;
 
 
 const app=express();
@@ -235,8 +236,8 @@ app.post("/logout",function(req,res){
 
 
 
-app.listen(3000,function(req,res){
-    console.log("server has started on port 3000");
+app.listen(PORT,function(req,res){
+    console.log("server started on port"+PORT);
 });
 
 
