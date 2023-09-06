@@ -2,7 +2,8 @@ require('dotenv').config();
 const bodyParser = require("body-parser");
 const express=require("express");
 const mongoose=require("mongoose");
-const session=require("express-session");
+const session = require('cookie-session');
+
 const passport=require("passport");
 const passportLocalMongoose=require("passport-local-mongoose");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
@@ -23,6 +24,7 @@ app.use(session({
     secret: 'keyboard cat',
     resave: false,
     saveUninitialized: true,
+   
 
 }));
 
@@ -66,29 +68,6 @@ passport.deserializeUser(function (user, cb) {
         return cb(null, user);
     });
 });
-// passport.use(new GoogleStrategy({
-//     clientID: process.env.client_ID,
-//     clientSecret: process.env.client_Secret,
-//     callbackURL: "http://localhost:3000/auth/google/secrets",
-//     // UserProfileURL:"https://www.googleapis.com/oauth20/v3/userinfo",
-//     userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo',
-//     scope: ['profile', 'email', 'openid']
-// },
-//     (accessToken, refreshToken, profile, done) => {
-//        const userData={
-       
-//            photo: profile.photos,
-//          name: profile.displayName
-//        };
-
-   
-
-//         usermodel.findOrCreate({ googleId: profile.id, photo:profile.photos[0].value,name:profile.displayName});
-           
-//             return done(null,userData);
-//     }
-// ));
-// ---------------------------------------------------
 
 passport.use(new GoogleStrategy({
     clientID: process.env.client_ID,
@@ -135,54 +114,6 @@ passport.use(new GoogleStrategy({
 
 
     
-
-        // const userData = {
-        //     photo: profile.photos,
-        //     name: profile.displayName,
-        //     mobile:"8210150752"
-        // };
-          
-
-        // // Depending on your implementation, you should handle the user creation logic here
-        // // Example using Mongoose
-        // usermodel.findOne({ googleId: profile.id })
-        //     .then(user=>{
-               
-        //         if (!user) {
-        //             // If the user doesn't exist, create a new user
-        //             const newUser = new usermodel({
-        //                 googleId: profile.id,
-        //                 photo: userData.photo,
-        //                 name: userData.name
-        //             });
-            //         newUser.save();
-                    
-            //         return done(null,userData);
-                    
-                
-            //     } else {
-            //         // If the user already exists, return the userData
-                   
-            //         return done(null,userData);
-            //     }
-            
-            // })
-            // .catch(err=>{
-            //     console.log(err);
-            // })
-            
-        
-        
-                
-                
-          
-        
-   
-
-    
-
-// item1.save();
-
 app.get("/",function(req,res){
     res.render('home');
 });
@@ -306,7 +237,5 @@ app.listen(3000,function(req,res){
 });
 
 
-function newFunction() {
-    console.log(req.user.photo);
-}
+
 
