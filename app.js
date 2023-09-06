@@ -2,7 +2,8 @@ require('dotenv').config();
 const bodyParser = require("body-parser");
 const express=require("express");
 const mongoose=require("mongoose");
-const session = require('cookie-session');
+const session=require('express-session');
+
 
 const passport=require("passport");
 const passportLocalMongoose=require("passport-local-mongoose");
@@ -70,11 +71,12 @@ passport.deserializeUser(function (user, cb) {
 });
 
 passport.use(new GoogleStrategy({
-    clientID: process.env.client_ID,
-    clientSecret: process.env.client_Secret,
+    clientID: process.env.Client_ID,
+    clientSecret: process.env.Client_secret,
     callbackURL: "http://localhost:3000/auth/google/secrets",
     userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo',
     scope: ['profile', 'email', 'openid']
+   
 },
     (accessToken, refreshToken, profile, done) => {
 
@@ -117,6 +119,7 @@ passport.use(new GoogleStrategy({
 app.get("/",function(req,res){
     res.render('home');
 });
+
 
 app.get('/auth/google',
     passport.authenticate('google', {
