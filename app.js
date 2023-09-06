@@ -74,7 +74,7 @@ passport.deserializeUser(function (user, cb) {
 passport.use(new GoogleStrategy({
     clientID: process.env.Client_ID,
     clientSecret: process.env.Client_secret,
-    callbackURL: "https://firstweb-kjks.onrender.com//auth/google/secrets",
+    callbackURL: "https://firstweb-kjks.onrender.com/auth/google/secrets",
     userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo',
     scope: ['profile', 'email', 'openid']
    
