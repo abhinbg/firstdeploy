@@ -7,9 +7,10 @@ const passport=require("passport");
 const passportLocalMongoose=require("passport-local-mongoose");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate =require("mongoose-findorcreate");
-const PORT=process.env.PORT || 3000;
+
 
 const app=express();
+
 
 
 
@@ -31,15 +32,21 @@ app.use(passport.session());
 
 
 
-mongoose.connect("mongodb://127.0.0.1:27017/security");
+mongoose.connect("mongodb+srv://chotu:ak123@cluster0.lurrdal.mongodb.net/UserDetails");
+// mongoose.connect("mongodb://127.0.0.1:27017/UserDetails");
 
 
 const userschema=new mongoose.Schema( {
     username:String,
     password:String,
-    photo:String,
+    photo:
+    {
+        data: Buffer,
+        contentType: String
+    },
     name:String,
-    googleId:String
+    googleId:String,
+    mobile:String
 });
 userschema.plugin(passportLocalMongoose);
 userschema.plugin(findOrCreate);
@@ -91,39 +98,87 @@ passport.use(new GoogleStrategy({
     scope: ['profile', 'email', 'openid']
 },
     (accessToken, refreshToken, profile, done) => {
-        const userData = {
-            photo: profile.photos[0].value, 
-            name: profile.displayName
-        };
 
-        // Depending on your implementation, you should handle the user creation logic here
-        // Example using Mongoose
+        const userData = {
+            photo: profile.photos[0].value,
+            name: profile.displayName,
+            mobile: "8210150752"
+        };
+        
+
         usermodel.findOne({ googleId: profile.id })
-            .then(user=>{
-               
+            .then(user => {
                 if (!user) {
-                    // If the user doesn't exist, create a new user
                     const newUser = new usermodel({
                         googleId: profile.id,
                         photo: userData.photo,
-                        name: userData.name
+                        name: userData.name,
+                        mobile: userData.mobile
                     });
-                    newUser.save();
-                
+
+                    return newUser.save();
                 } else {
-                    // If the user already exists, return the userData
-                    return done(null, userData);
+                    return Promise.resolve(user); // Resolve with the existing user
                 }
             })
-            .catch(err=>{
-                console.log(err);
+            .then(savedUser => {
+               return done(null, savedUser);
             })
+            .catch(err => {
+                console.log(err);
+               return done(err, null);
+            });
+        
+    }));
+
+
+
+
+    
+
+        // const userData = {
+        //     photo: profile.photos,
+        //     name: profile.displayName,
+        //     mobile:"8210150752"
+        // };
+          
+
+        // // Depending on your implementation, you should handle the user creation logic here
+        // // Example using Mongoose
+        // usermodel.findOne({ googleId: profile.id })
+        //     .then(user=>{
+               
+        //         if (!user) {
+        //             // If the user doesn't exist, create a new user
+        //             const newUser = new usermodel({
+        //                 googleId: profile.id,
+        //                 photo: userData.photo,
+        //                 name: userData.name
+        //             });
+            //         newUser.save();
+                    
+            //         return done(null,userData);
+                    
+                
+            //     } else {
+            //         // If the user already exists, return the userData
+                   
+            //         return done(null,userData);
+            //     }
+            
+            // })
+            // .catch(err=>{
+            //     console.log(err);
+            // })
+            
+        
         
                 
                 
           
         
-    }));
+   
+
     
 
 // item1.save();
@@ -151,12 +206,16 @@ app.get("/Register",function(req,res){
 
 app.get("/secrets",function(req,res){
     if(req.isAuthenticated()){
+      
        const user=req.user;
-        console.log(user.name);
-        console.log(user.photo);
+       console.log(user.mobile);
+       
+    console.log(user);
+       res.render('profile',{user});
+   
 
            
-            res.render('profile',{user});
+            
          
         
         
@@ -176,6 +235,8 @@ app.post("/Register",function(req,res){
     else{
         passport.authenticate('local')(req,res,function(){
             res.redirect("/secrets");
+          
+
         })
           
     }
@@ -240,9 +301,12 @@ app.post("/logout",function(req,res){
 
 
 
-
 app.listen(3000,function(req,res){
     console.log("server has started on port 3000");
 });
 
+
+function newFunction() {
+    console.log(req.user.photo);
+}
 
